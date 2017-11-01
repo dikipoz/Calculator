@@ -240,17 +240,31 @@ public class SwingFrame extends JFrame {
 		contentPane.add(btnCe);
 
 		JButton btnMemoryPlus = new MakeMemoryButton("M+", 170, 95, 45, 23);
+		
 		btnMemoryPlus.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent arg0) {
-				btnMemoryPlus.setOpaque(false);
+			public void mouseReleased(MouseEvent e) {
 			}
-
-			public void mousePressed(MouseEvent arg0) {
-				btnMemoryPlus.setOpaque(true);
+			public void mousePressed(MouseEvent e) {
 				if (sb.length() > 0) {
 					memory += Double.parseDouble(sb.toString());
 					sb = new StringBuilder();
 					textFieldMemory.setText("M");
+					}
+			}
+			public void mouseExited(MouseEvent e) {
+			}
+			public void mouseEntered(MouseEvent e) {
+			}
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		//btnMemoryPlus.mo.addMouseListener();
+			/*public void mouseReleased(MouseEvent arg0) {
+			}
+
+			public void mousePressed(MouseEvent arg0) {
+				btnMemoryPlus.setBackground(Color.RED);
+				
 				}
 			}
 
@@ -262,29 +276,23 @@ public class SwingFrame extends JFrame {
 
 			public void mouseClicked(MouseEvent arg0) {
 			}
-		});
+		});*/
 		contentPane.add(btnMemoryPlus);
 
 		JButton btnMemoryMinus = new MakeMemoryButton("M-", 220, 95, 45, 23);
 		btnMemoryMinus.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
-				btnMemoryMinus.setOpaque(false);
 			}
-
 			public void mousePressed(MouseEvent e) {
-				btnMemoryMinus.setOpaque(true);
 				if (sb.length() > 0) {
 					memory -= Double.parseDouble(sb.toString());
 					System.out.println(textFieldMemory.getText());
 				}
 			}
-
 			public void mouseExited(MouseEvent e) {
 			}
-
 			public void mouseEntered(MouseEvent e) {
 			}
-
 			public void mouseClicked(MouseEvent e) {
 			}
 		});
@@ -293,23 +301,17 @@ public class SwingFrame extends JFrame {
 		JButton btnMemoryRead = new MakeMemoryButton("MR", 270, 95, 45, 23);
 		btnMemoryRead.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {
-				btnMemoryRead.setOpaque(false);
 			}
-
 			public void mousePressed(MouseEvent arg0) {
-				btnMemoryRead.setOpaque(true);
 				if (memory != 0) {
 					textField_digit.setText(memory + "");
 					textFieldMemory.setText("M");
 				}
 			}
-
 			public void mouseExited(MouseEvent arg0) {
 			}
-
 			public void mouseEntered(MouseEvent arg0) {
 			}
-
 			public void mouseClicked(MouseEvent arg0) {
 			}
 		});
@@ -321,22 +323,15 @@ public class SwingFrame extends JFrame {
 		btnMemoruClear.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent arg0) {
 			}
-
 			public void mouseEntered(MouseEvent arg0) {
 			}
-
 			public void mouseExited(MouseEvent arg0) {
 			}
-
 			public void mousePressed(MouseEvent arg0) {
-				btnMemoruClear.setOpaque(true);
 				memory = 0;
 				textFieldMemory.setText("");
 			}
-
 			public void mouseReleased(MouseEvent e) {
-				btnMemoruClear.setOpaque(false);
-
 			}
 		});
 		contentPane.add(btnMemoruClear);
@@ -354,29 +349,24 @@ public class SwingFrame extends JFrame {
 		btnExit.setOpaque(false);
 		btnExit.setContentAreaFilled(false);
 		btnExit.addMouseListener(new MouseListener() {
-
 			public void mouseReleased(MouseEvent e) {
 			}
-
 			public void mousePressed(MouseEvent e) {
 				System.exit(0);
 			}
-
 			public void mouseExited(MouseEvent e) {
 				btnExit.setOpaque(false);
 				btnExit.setContentAreaFilled(false);
 			}
-
 			public void mouseEntered(MouseEvent e) {
 				btnExit.setOpaque(true);
 				btnExit.setContentAreaFilled(true);
 			}
-
 			public void mouseClicked(MouseEvent e) {
 			}
 		});
 
-		MakeMemoryButton makeMemoryButton = new MakeMemoryButton("MS", 370, 95, 45, 23);
+		JButton makeMemoryButton = new MakeMemoryButton("MS", 370, 95, 45, 23);
 		contentPane.add(makeMemoryButton);
 		contentPane.add(btnExit);
 

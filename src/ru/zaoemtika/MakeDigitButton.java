@@ -30,5 +30,7 @@ public class MakeDigitButton extends JButton{
 		setFocusable(false);
 		setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
+	
+	
 
 }
