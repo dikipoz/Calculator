@@ -33,13 +33,14 @@ public class SwingFrame extends JFrame {
 	private double memory;
 	private JTextField textFieldMemory;
 
-	private double x1, x2;
 	private String znak;
-	private boolean znakPosition;
+	private boolean flagPlus;
+	private static String x1;
+	private static String x2;
 
 	public SwingFrame() {
 
-		System.out.println(2 + '+' + 2);
+		System.out.println(x1);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SwingFrame.class.getResource("/ru/images/calculator.png")));
 
 		// инициализация StringBuilder
@@ -151,23 +152,26 @@ public class SwingFrame extends JFrame {
 		button_plus.setIcon(new ImageIcon(SwingFrame.class.getResource("/ru/images/plus16px.png")));
 		button_plus.addMouseListener(new ActionMouseListener(button_plus, 1));
 		button_plus.addActionListener(e -> {
-			if (!znakPosition) {
-				x1 = Double.parseDouble(sb.toString());
-				//znak = "plus";
-				znakPosition = true;
-				sb = new StringBuilder();
-				System.out.println("1");
-			} else {
-				x2 = Double.parseDouble(sb.toString());
-				sb = new StringBuilder();
-				sb.append(x1 + x2);
-				znakPosition = false;
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+			if (!flagPlus)
+				if (x1 == null) {
+					x1 = sb.toString();
+					// znak = "plus";
+					flagPlus = true;
+					sb = new StringBuilder();
+					System.out.println("x1" + x1);
+				} else {
+					x2 = sb.toString();
+					sb = new StringBuilder();
+					sb.append(Double.parseDouble(x1) + Double.parseDouble(x2));
+					flagPlus = true;
+					if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
+						sb.delete(sb.length() - 2, sb.length());
+					}
+					x1 = sb.toString();
+					System.out.println("x2" + x2);
+					textField_digit.setText(sb.toString());
+					sb = new StringBuilder();
 				}
-				System.out.println("2");
-				textField_digit.setText(sb.toString());
-			}
 		});
 
 		contentPane.add(button_plus);
@@ -204,7 +208,7 @@ public class SwingFrame extends JFrame {
 				textField_digit.setText(sb.toString());
 				flag_point = false;
 				flag_reverse = false;
-				znakPosition = false;
+				flagPlus = false;
 			}
 
 			public void mouseExited(MouseEvent e) {
@@ -248,7 +252,7 @@ public class SwingFrame extends JFrame {
 					if (sb.length() == 0) {
 						textField_digit.setText("0");
 						flag_reverse = false;
-						znakPosition = false;
+						flagPlus = false;
 					}
 				}
 			}
@@ -566,7 +570,7 @@ public class SwingFrame extends JFrame {
 
 		public void mousePressed(MouseEvent e) {
 			this.button.setBackground(Color.RED);
-
+			flagPlus = false;
 			switch (digit) {
 			case ".": {
 				if (sb.length() < 15 & !flag_point) {
