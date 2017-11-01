@@ -17,6 +17,7 @@ public class MakeClearButton extends JButton{
 		setBounds(x, y, width, heigh);
 		setOpaque(false);
 		setContentAreaFilled(false);
+		setBackground(Color.LIGHT_GRAY);
 		setForeground(Color.WHITE);
 		setBorderPainted(false);
 		//setBackground(Color.RED);

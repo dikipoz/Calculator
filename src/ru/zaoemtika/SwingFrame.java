@@ -185,7 +185,6 @@ public class SwingFrame extends JFrame {
 			}
 
 			public void mouseEntered(MouseEvent e) {
-				btnClear.setBackground(Color.LIGHT_GRAY);
 				btnClear.setOpaque(true);
 			}
 
@@ -199,10 +198,11 @@ public class SwingFrame extends JFrame {
 		btnCe.setBounds(72, 95, 50, 38);
 		btnCe.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
-				btnCe.setOpaque(false);
+				btnCe.setBackground(Color.LIGHT_GRAY);
 			}
 
 			public void mousePressed(MouseEvent e) {
+				btnCe.setBackground(Color.RED);
 				btnCe.setOpaque(true);
 				if (sb.length() > 0) {
 					if (sb.substring(sb.length() - 1).equals(".")) {
@@ -226,12 +226,15 @@ public class SwingFrame extends JFrame {
 			}
 
 			public void mouseExited(MouseEvent e) {
+				btnCe.setOpaque(false);
 			}
 
 			public void mouseEntered(MouseEvent e) {
+				btnCe.setOpaque(true);
 			}
 
 			public void mouseClicked(MouseEvent e) {
+				
 			}
 		});
 		contentPane.add(btnCe);
@@ -476,24 +479,24 @@ public class SwingFrame extends JFrame {
 				btn_minimize.setOpaque(true);
 			}
 		});
-				
-						JLabel label_1 = new JLabel("x");
-						label_1.setForeground(Color.WHITE);
-						label_1.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-						label_1.setBounds(401, 191, 6, 14);
-						contentPane.add(label_1);
-		
-				JLabel label = new JLabel("y");
-				label.setForeground(Color.WHITE);
-				label.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-				label.setBounds(320, 191, 6, 14);
-				contentPane.add(label);
-		
-				JLabel lblNewLabel_1 = new JLabel("x");
-				lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-				lblNewLabel_1.setForeground(Color.WHITE);
-				lblNewLabel_1.setBounds(320, 238, 6, 14);
-				contentPane.add(lblNewLabel_1);
+
+		JLabel label_1 = new JLabel("x");
+		label_1.setForeground(Color.WHITE);
+		label_1.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+		label_1.setBounds(401, 191, 6, 14);
+		contentPane.add(label_1);
+
+		JLabel label = new JLabel("y");
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+		label.setBounds(320, 191, 6, 14);
+		contentPane.add(label);
+
+		JLabel lblNewLabel_1 = new JLabel("x");
+		lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+		lblNewLabel_1.setForeground(Color.WHITE);
+		lblNewLabel_1.setBounds(320, 238, 6, 14);
+		contentPane.add(lblNewLabel_1);
 		contentPane.add(btn_minimize);
 
 		JLabel lblNewLabel = new JLabel("");
@@ -566,11 +569,9 @@ public class SwingFrame extends JFrame {
 
 			}
 		}
-
 		public void mouseReleased(MouseEvent e) {
 			this.button.setBackground(Color.LIGHT_GRAY);
 		}
-
 	}
 
 	class ActionMouseListener implements MouseListener {
@@ -706,7 +707,7 @@ public class SwingFrame extends JFrame {
 				break;
 			}
 
-			case 13:{
+			case 13: {
 				double tmp = Math.log10(Double.parseDouble(sb.toString()));
 				sb = new StringBuilder();
 				sb.append(tmp);
@@ -715,10 +716,10 @@ public class SwingFrame extends JFrame {
 				}
 				textField_digit.setText(sb.toString());
 				break;
-				
+
 			}
-			
-			case 14:{
+
+			case 14: {
 				double tmp = Math.log(Double.parseDouble(sb.toString()));
 				sb = new StringBuilder();
 				sb.append(tmp);
@@ -727,7 +728,7 @@ public class SwingFrame extends JFrame {
 				}
 				textField_digit.setText(sb.toString());
 				break;
-				
+
 			}
 			case 17: {
 				sb = new StringBuilder();
