@@ -33,7 +33,13 @@ public class SwingFrame extends JFrame {
 	private double memory;
 	private JTextField textFieldMemory;
 
+	private double x1, x2;
+	private String znak;
+	private boolean znakPosition;
+
 	public SwingFrame() {
+
+		System.out.println(2 + '+' + 2);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SwingFrame.class.getResource("/ru/images/calculator.png")));
 
 		// инициализация StringBuilder
@@ -144,6 +150,26 @@ public class SwingFrame extends JFrame {
 		JButton button_plus = new MakeActionButton("", 216, 144, 32, 35);
 		button_plus.setIcon(new ImageIcon(SwingFrame.class.getResource("/ru/images/plus16px.png")));
 		button_plus.addMouseListener(new ActionMouseListener(button_plus, 1));
+		button_plus.addActionListener(e -> {
+			if (!znakPosition) {
+				x1 = Double.parseDouble(sb.toString());
+				//znak = "plus";
+				znakPosition = true;
+				sb = new StringBuilder();
+				System.out.println("1");
+			} else {
+				x2 = Double.parseDouble(sb.toString());
+				sb = new StringBuilder();
+				sb.append(x1 + x2);
+				znakPosition = false;
+				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
+					sb.delete(sb.length() - 2, sb.length());
+				}
+				System.out.println("2");
+				textField_digit.setText(sb.toString());
+			}
+		});
+
 		contentPane.add(button_plus);
 
 		JButton button_minus = new MakeActionButton("", 216, 190, 32, 35);
@@ -178,6 +204,7 @@ public class SwingFrame extends JFrame {
 				textField_digit.setText(sb.toString());
 				flag_point = false;
 				flag_reverse = false;
+				znakPosition = false;
 			}
 
 			public void mouseExited(MouseEvent e) {
@@ -221,6 +248,7 @@ public class SwingFrame extends JFrame {
 					if (sb.length() == 0) {
 						textField_digit.setText("0");
 						flag_reverse = false;
+						znakPosition = false;
 					}
 				}
 			}
@@ -234,65 +262,69 @@ public class SwingFrame extends JFrame {
 			}
 
 			public void mouseClicked(MouseEvent e) {
-				
+
 			}
 		});
 		contentPane.add(btnCe);
 
 		JButton btnMemoryPlus = new MakeMemoryButton("M+", 170, 95, 45, 23);
-		
+
 		btnMemoryPlus.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
 			}
+
 			public void mousePressed(MouseEvent e) {
 				if (sb.length() > 0) {
 					memory += Double.parseDouble(sb.toString());
 					sb = new StringBuilder();
 					textFieldMemory.setText("M");
-					}
-			}
-			public void mouseExited(MouseEvent e) {
-			}
-			public void mouseEntered(MouseEvent e) {
-			}
-			public void mouseClicked(MouseEvent e) {
-			}
-		});
-		//btnMemoryPlus.mo.addMouseListener();
-			/*public void mouseReleased(MouseEvent arg0) {
-			}
-
-			public void mousePressed(MouseEvent arg0) {
-				btnMemoryPlus.setBackground(Color.RED);
-				
 				}
 			}
 
-			public void mouseExited(MouseEvent arg0) {
+			public void mouseExited(MouseEvent e) {
 			}
 
-			public void mouseEntered(MouseEvent arg0) {
+			public void mouseEntered(MouseEvent e) {
 			}
 
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 			}
-		});*/
+		});
+		// btnMemoryPlus.mo.addMouseListener();
+		/*
+		 * public void mouseReleased(MouseEvent arg0) { }
+		 * 
+		 * public void mousePressed(MouseEvent arg0) {
+		 * btnMemoryPlus.setBackground(Color.RED);
+		 * 
+		 * } }
+		 * 
+		 * public void mouseExited(MouseEvent arg0) { }
+		 * 
+		 * public void mouseEntered(MouseEvent arg0) { }
+		 * 
+		 * public void mouseClicked(MouseEvent arg0) { } });
+		 */
 		contentPane.add(btnMemoryPlus);
 
 		JButton btnMemoryMinus = new MakeMemoryButton("M-", 220, 95, 45, 23);
 		btnMemoryMinus.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
 			}
+
 			public void mousePressed(MouseEvent e) {
 				if (sb.length() > 0) {
 					memory -= Double.parseDouble(sb.toString());
 					System.out.println(textFieldMemory.getText());
 				}
 			}
+
 			public void mouseExited(MouseEvent e) {
 			}
+
 			public void mouseEntered(MouseEvent e) {
 			}
+
 			public void mouseClicked(MouseEvent e) {
 			}
 		});
@@ -302,16 +334,20 @@ public class SwingFrame extends JFrame {
 		btnMemoryRead.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {
 			}
+
 			public void mousePressed(MouseEvent arg0) {
 				if (memory != 0) {
 					textField_digit.setText(memory + "");
 					textFieldMemory.setText("M");
 				}
 			}
+
 			public void mouseExited(MouseEvent arg0) {
 			}
+
 			public void mouseEntered(MouseEvent arg0) {
 			}
+
 			public void mouseClicked(MouseEvent arg0) {
 			}
 		});
@@ -323,14 +359,18 @@ public class SwingFrame extends JFrame {
 		btnMemoruClear.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent arg0) {
 			}
+
 			public void mouseEntered(MouseEvent arg0) {
 			}
+
 			public void mouseExited(MouseEvent arg0) {
 			}
+
 			public void mousePressed(MouseEvent arg0) {
 				memory = 0;
 				textFieldMemory.setText("");
 			}
+
 			public void mouseReleased(MouseEvent e) {
 			}
 		});
@@ -351,17 +391,21 @@ public class SwingFrame extends JFrame {
 		btnExit.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
 			}
+
 			public void mousePressed(MouseEvent e) {
 				System.exit(0);
 			}
+
 			public void mouseExited(MouseEvent e) {
 				btnExit.setOpaque(false);
 				btnExit.setContentAreaFilled(false);
 			}
+
 			public void mouseEntered(MouseEvent e) {
 				btnExit.setOpaque(true);
 				btnExit.setContentAreaFilled(true);
 			}
+
 			public void mouseClicked(MouseEvent e) {
 			}
 		});
@@ -559,6 +603,7 @@ public class SwingFrame extends JFrame {
 
 			}
 		}
+
 		public void mouseReleased(MouseEvent e) {
 			this.button.setBackground(Color.LIGHT_GRAY);
 		}
