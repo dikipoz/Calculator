@@ -153,6 +153,7 @@ public class SwingFrame extends JFrame {
 		button_plus.addMouseListener(new ActionMouseListener(button_plus, 1));
 		button_plus.addActionListener(e -> {
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if (!znakPosition) {
 				x1 = Double.parseDouble(sb.toString());
 				znakPosition = true;
@@ -167,6 +168,28 @@ public class SwingFrame extends JFrame {
 				}
 				textField_digit.setText(sb.toString());
 			}
+=======
+			if (!flagPlus)
+				if (x1 == null) {
+					x1 = sb.toString();
+					// znak = "plus";
+					flagPlus = true;
+					sb = new StringBuilder();
+					System.out.println("x1" + x1);
+				} else {
+					x2 = sb.toString();
+					sb = new StringBuilder();
+					sb.append(Double.parseDouble(x1) + Double.parseDouble(x2));
+					flagPlus = true;
+					if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
+						sb.delete(sb.length() - 2, sb.length());
+					}
+					x1 = sb.toString();
+					System.out.println("x2" + x2);
+					textField_digit.setText(sb.toString());
+					sb = new StringBuilder();
+				}
+>>>>>>> 4b147f81cab2824c914f0d2609c71e4057e85d40
 =======
 			if (!flagPlus)
 				if (x1 == null) {
