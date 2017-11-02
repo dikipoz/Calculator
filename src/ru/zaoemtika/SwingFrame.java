@@ -9,6 +9,10 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.Insets;
@@ -28,13 +32,13 @@ public class SwingFrame extends JFrame {
 	private JTextField textField_digit;
 
 	private boolean flag_point = false;
-	private boolean flag_reverse = false;
-	private StringBuilder sb = new StringBuilder();
+	private StringBuilder sbFull = new StringBuilder();
+	private StringBuilder sbForTextWindow = new StringBuilder();
 	private double memory;
 	private JTextField textFieldMemory;
 
-	private String znak;
 	private boolean flagPlus;
+	protected boolean flag_reverse;
 	private static String x1;
 	private static String x2;
 
@@ -44,7 +48,7 @@ public class SwingFrame extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SwingFrame.class.getResource("/ru/images/calculator.png")));
 
 		// инициализация StringBuilder
-		sb.append(0);
+		sbForTextWindow.append(0);
 
 		MouseAdapter adapter = new MouseAdapter() {
 			int x, y;
@@ -154,23 +158,21 @@ public class SwingFrame extends JFrame {
 		button_plus.addActionListener(e -> {
 			if (!flagPlus)
 				if (x1 == null) {
-					x1 = sb.toString();
+					x1 = sbForTextWindow.toString();
 					// znak = "plus";
 					flagPlus = true;
-					sb = new StringBuilder();
-					System.out.println("x1" + x1);
+					sbForTextWindow = new StringBuilder();
 				} else {
-					x2 = sb.toString();
-					sb = new StringBuilder();
-					sb.append(Double.parseDouble(x1) + Double.parseDouble(x2));
+					x2 = sbForTextWindow.toString();
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(Double.parseDouble(x1) + Double.parseDouble(x2));
 					flagPlus = true;
-					if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-						sb.delete(sb.length() - 2, sb.length());
+					if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+						sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 					}
-					x1 = sb.toString();
-					System.out.println("x2" + x2);
-					textField_digit.setText(sb.toString());
-					sb = new StringBuilder();
+					x1 = sbForTextWindow.toString();
+					textField_digit.setText(sbForTextWindow.toString());
+					sbForTextWindow = new StringBuilder();
 				}
 		});
 
@@ -179,6 +181,25 @@ public class SwingFrame extends JFrame {
 		JButton button_minus = new MakeActionButton("", 216, 190, 32, 35);
 		button_minus.setIcon(new ImageIcon(SwingFrame.class.getResource("/ru/images/minus16px.png")));
 		button_minus.addMouseListener(new ActionMouseListener(button_minus, 2));
+		button_minus.addActionListener(e -> {
+			if (!flagPlus)
+				if (x1 == null) {
+					x1 = sbForTextWindow.toString();
+					flagPlus = true;
+					sbForTextWindow = new StringBuilder();
+				} else {
+					x2 = sbForTextWindow.toString();
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(Double.parseDouble(x1) - Double.parseDouble(x2));
+					flagPlus = true;
+					if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+						sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
+					}
+					x1 = sbForTextWindow.toString();
+					textField_digit.setText(sbForTextWindow.toString());
+					sbForTextWindow = new StringBuilder();
+				}
+		});
 		contentPane.add(button_minus);
 
 		JButton button_asterisk = new MakeActionButton("", 216, 236, 32, 35);
@@ -202,10 +223,10 @@ public class SwingFrame extends JFrame {
 
 			public void mousePressed(MouseEvent e) {
 				btnClear.setBackground(Color.RED);
-				sb = new StringBuilder();
-				sb.append(0);
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(0);
 				memory = 0;
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				flag_point = false;
 				flag_reverse = false;
 				flagPlus = false;
@@ -235,21 +256,21 @@ public class SwingFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				btnCe.setBackground(Color.RED);
 				btnCe.setOpaque(true);
-				if (sb.length() > 0) {
-					if (sb.substring(sb.length() - 1).equals(".")) {
+				if (sbForTextWindow.length() > 0) {
+					if (sbForTextWindow.substring(sbForTextWindow.length() - 1).equals(".")) {
 						flag_point = false;
 					}
-					sb.deleteCharAt(sb.length() - 1);
-					textField_digit.setText(sb.toString());
+					sbForTextWindow.deleteCharAt(sbForTextWindow.length() - 1);
+					textField_digit.setText(sbForTextWindow.toString());
 					if (memory != 0) {
 						textFieldMemory.setText("M");
 					}
-					if (sb.length() == 1 && sb.charAt(0) == '-') {
-						sb = new StringBuilder();
+					if (sbForTextWindow.length() == 1 && sbForTextWindow.charAt(0) == '-') {
+						sbForTextWindow = new StringBuilder();
 						textField_digit.setText("0");
 						flag_reverse = false;
 					}
-					if (sb.length() == 0) {
+					if (sbForTextWindow.length() == 0) {
 						textField_digit.setText("0");
 						flag_reverse = false;
 						flagPlus = false;
@@ -278,9 +299,9 @@ public class SwingFrame extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				if (sb.length() > 0) {
-					memory += Double.parseDouble(sb.toString());
-					sb = new StringBuilder();
+				if (sbForTextWindow.length() > 0) {
+					memory += Double.parseDouble(sbForTextWindow.toString());
+					sbForTextWindow = new StringBuilder();
 					textFieldMemory.setText("M");
 				}
 			}
@@ -317,8 +338,8 @@ public class SwingFrame extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				if (sb.length() > 0) {
-					memory -= Double.parseDouble(sb.toString());
+				if (sbForTextWindow.length() > 0) {
+					memory -= Double.parseDouble(sbForTextWindow.toString());
 					System.out.println(textFieldMemory.getText());
 				}
 			}
@@ -573,31 +594,35 @@ public class SwingFrame extends JFrame {
 			flagPlus = false;
 			switch (digit) {
 			case ".": {
-				if (sb.length() < 15 & !flag_point) {
-					sb.append(".");
+				if (sbForTextWindow.length() < 15 & !flag_point) {
+					sbForTextWindow.append(".");
+					sbFull.append(".");
 					flag_point = true;
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 
 			case "0": {
-				if (sb.length() < 18)
-					if (!sb.toString().equals("0")) {
-						sb.append(0);
-						textField_digit.setText(sb.toString());
+				if (sbForTextWindow.length() < 18)
+					if (!sbForTextWindow.toString().equals("0")) {
+						sbForTextWindow.append(0);
+						sbFull.append(0);
+						textField_digit.setText(sbForTextWindow.toString());
 					}
 				break;
 			}
 			default: {
-				if (sb.length() < 18) {
-					if (sb.toString().equals("0")) {
-						sb = new StringBuilder();
-						sb.append(digit);
-						textField_digit.setText(sb.toString());
+				if (sbForTextWindow.length() < 18) {
+					if (sbForTextWindow.toString().equals("0")) {
+						sbForTextWindow = new StringBuilder();
+						sbForTextWindow.append(digit);
+						sbFull.append(digit);
+						textField_digit.setText(sbForTextWindow.toString());
 					} else {
-						sb.append(digit);
-						textField_digit.setText(sb.toString());
+						sbForTextWindow.append(digit);
+						sbFull.append(digit);
+						textField_digit.setText(sbForTextWindow.toString());
 					}
 					if (memory != 0) {
 						textFieldMemory.setText("M");
@@ -639,148 +664,171 @@ public class SwingFrame extends JFrame {
 
 			switch (i) {
 			case 0: {
-				if (!flag_reverse) {
-					if (!sb.toString().equals("0")) {
-						sb.insert(0, "-");
+				if (Double.parseDouble(sbForTextWindow.toString()) > 0) {
+					if (!sbForTextWindow.toString().equals("0")) {
+						sbForTextWindow.insert(0, "-");
+						sbFull.insert(0, "-");
 						flag_reverse = true;
 					}
 				} else {
-					sb.delete(0, 1);
-					flag_reverse = false;
+					if (!sbForTextWindow.toString().equals("0")) {
+						sbForTextWindow.delete(0, 1);
+						sbFull.delete(0, 1);
+						flag_reverse = false;
+					}
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 			}
 			case 1: {
 
 				break;
 			}
 			case 5: {
-				double tmp = 1 / Double.parseDouble(sb.toString());
-				sb = new StringBuilder();
-				sb.append(MathUtils.round(tmp, 18));
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				double tmp = 1 / Double.parseDouble(sbForTextWindow.toString());
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(MathUtils.round(tmp, 18));
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 			case 6: {
-				double tmp = Math.sin(Math.toRadians(Double.parseDouble(sb.toString())));
+				double tmp = Math.sin(Math.toRadians(Double.parseDouble(sbForTextWindow.toString())));
 				if (MathUtils.round(tmp, 14) == 0) {
-					sb = new StringBuilder();
-					sb.append(MathUtils.round(tmp, 1));
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(MathUtils.round(tmp, 1));
 				} else {
-					sb = new StringBuilder();
-					sb.append(MathUtils.round(tmp, 16));
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(MathUtils.round(tmp, 16));
 				}
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				if (Double.parseDouble(sb.toString()) < 0)
+				if (Double.parseDouble(sbForTextWindow.toString()) < 0)
 					flag_reverse = true;
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 
 			case 7: {
-				double tmp = Math.cos(Math.toRadians(Double.parseDouble(sb.toString())));
+				double tmp = Math.cos(Math.toRadians(Double.parseDouble(sbForTextWindow.toString())));
 
 				if (MathUtils.round(tmp, 16) == 0) {
-					sb = new StringBuilder();
-					sb.append(MathUtils.round(tmp, 1));
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(MathUtils.round(tmp, 1));
 				} else {
-					sb = new StringBuilder();
-					sb.append(MathUtils.round(tmp, 14));
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(MathUtils.round(tmp, 14));
 				}
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				if (Double.parseDouble(sb.toString()) < 0)
+				if (Double.parseDouble(sbForTextWindow.toString()) < 0)
 					flag_reverse = true;
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 			case 8: {
-				double tmp = Math.cos(Math.toRadians(Double.parseDouble(sb.toString())));
+				double tmp = Math.cos(Math.toRadians(Double.parseDouble(sbForTextWindow.toString())));
 
 				if (MathUtils.round(tmp, 14) == 0) {
-					sb = new StringBuilder();
-					sb.append("Ошибка");
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append("Ошибка");
 				} else {
-					tmp = Math.tan(Math.toRadians(Double.parseDouble(sb.toString())));
-					sb = new StringBuilder();
-					sb.append(MathUtils.round(tmp, 18));
+					tmp = Math.tan(Math.toRadians(Double.parseDouble(sbForTextWindow.toString())));
+					sbForTextWindow = new StringBuilder();
+					sbForTextWindow.append(MathUtils.round(tmp, 18));
 				}
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
 				try {
-					if (Double.parseDouble(sb.toString()) < 0)
+					if (Double.parseDouble(sbForTextWindow.toString()) < 0)
 						flag_reverse = true;
 				} catch (NumberFormatException ex) {
 					flag_reverse = true;
-					textField_digit.setText(sb.toString());
+					textField_digit.setText(sbForTextWindow.toString());
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 			case 9: {
-				double tmp = Double.parseDouble(sb.toString()) * Double.parseDouble(sb.toString());
-				sb = new StringBuilder();
-				sb.append(tmp);
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				double tmp = Double.parseDouble(sbForTextWindow.toString()) * Double.parseDouble(sbForTextWindow.toString());
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(tmp);
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 
 				break;
 			}
 			case 12: {
-				double tmp = Math.sqrt(Double.parseDouble(sb.toString()));
-				sb = new StringBuilder();
-				sb.append(tmp);
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				double tmp = Math.sqrt(Double.parseDouble(sbForTextWindow.toString()));
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(tmp);
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 
 			case 13: {
-				double tmp = Math.log10(Double.parseDouble(sb.toString()));
-				sb = new StringBuilder();
-				sb.append(tmp);
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				double tmp = Math.log10(Double.parseDouble(sbForTextWindow.toString()));
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(tmp);
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 
 			}
 
 			case 14: {
-				double tmp = Math.log(Double.parseDouble(sb.toString()));
-				sb = new StringBuilder();
-				sb.append(tmp);
-				if (sb.length() > 2 && sb.substring(sb.length() - 2, sb.length()).equals(".0")) {
-					sb.delete(sb.length() - 2, sb.length());
+				double tmp = Math.log(Double.parseDouble(sbForTextWindow.toString()));
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(tmp);
+				if (sbForTextWindow.length() > 2 && sbForTextWindow.substring(sbForTextWindow.length() - 2, sbForTextWindow.length()).equals(".0")) {
+					sbForTextWindow.delete(sbForTextWindow.length() - 2, sbForTextWindow.length());
 				}
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 
 			}
 			case 17: {
-				sb = new StringBuilder();
-				sb.append(Math.PI);
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(Math.PI);
 				flag_point = true;
-				textField_digit.setText(sb.toString());
+				textField_digit.setText(sbForTextWindow.toString());
 				break;
 			}
 			case 18: {
-				double tmp = Math.pow(Math.E, Double.parseDouble(sb.toString()));
-				sb = new StringBuilder();
-				sb.append(MathUtils.round(tmp, 14));
-				textField_digit.setText(sb.toString());
+				double tmp = Math.pow(Math.E, Double.parseDouble(sbForTextWindow.toString()));
+				sbForTextWindow = new StringBuilder();
+				sbForTextWindow.append(MathUtils.round(tmp, 14));
+				textField_digit.setText(sbForTextWindow.toString());
+				break;
+			}
+			case 20: {
+				Pattern pattern = Pattern.compile("([0-9]+)|(\\+|\\-|\\*|\\/)");
+				Matcher matcher = pattern.matcher("1.5+25*10/2");
+
+				while (matcher.find()) {
+				    System.out.println(matcher.group());
+				}
+				
+				String s = "I like you 100 times, and you? I'm not sure about number 1.2345.";
+				String[] parts = (s + " ").split("\\p{P}?[ \\t\\n\\r]+");
+				System.out.println(Arrays.toString(parts));
+				if (x1 != null) {
+					if (x2 != null) {
+
+					}
+				}
+				break;
 			}
 			}
 		}
@@ -789,5 +837,11 @@ public class SwingFrame extends JFrame {
 			this.button.setBackground(Color.LIGHT_GRAY);
 		}
 
+	}
+	
+	public void parseSB(){
+		StringBuilder sb1 = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
+		
 	}
 }
